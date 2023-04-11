@@ -2,6 +2,8 @@ from tkinter import ttk
 from tkinter import *
 from tkcalendar import *
 import tkinter.font
+from tkinter import messagebox
+
 from tkinter import PhotoImage
 
 
@@ -11,6 +13,29 @@ window.minsize(width=500, height=700)
 window.configure(bg="LightPink1")
 #filename=PhotoImage(file="cakes.jpeg")
 
+# creating main frame
+main_frame= Frame(root)
+main_frame.pack(fill=BOTH, expand=1)
+
+#SCROLLBAR (created using a codemy YouTube tutorial)
+
+# creating a canvas
+my_canvas = Canvas(main_frame)
+my_canvas.pack(side=LEFT, fill=BOTh, expand=1)
+
+# Adding a scrollbar to the canvas
+my_scrollbar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
+my_scroolbar.pack(side=RIGHT, fill=Y)
+
+# configure the canvas
+my_canvas.configure(yscrollcommand=my_scrollbar.set)
+my_canvas.bind('<Configure>', lambda e: my_canvas.configure()
+
+# create another frame inside the canvas
+second_frame = Frame(my_canvas)
+
+# add that new frame to a window in the canvas
+my_canvas.create_window((0,0), window= second_frame, anchor= "nw")
 
 frame = tkinter.Frame(window)
 frame.pack()
@@ -100,20 +125,44 @@ date_info_frame.grid(row=3, column=0, sticky= "news", padx=20, pady=20)
 cal= Calendar(date_info_frame, selectmode="day", year=2020, month=5, day=22 )
 cal.pack(pady=20)
 
+# choose date from calendar, (using Tkinter's built in calendar widget)
 def grab_date():
     my_label.config(text=cal.get_date())
 
 my_button =Button(date_info_frame, text= "Select Date", command= grab_date)
 my_button.pack(pady=20)
 
-#time_label = Label(date_info_frame, text="timing")
-#time_label.grid(row= 3, column= 0, pady=20)
+# choose time
+time_info_frame =tkinter.LabelFrame(frame, text= "Contact Details")
+time_info_frame.grid(row=4, column=0, sticky="news", padx=20, pady=20)
 
-#time_entry= tkinter.Entry(date_info_frame)
+time_label =tkinter.Label(time_info_frame, text= "Timing")
+time_label.grid(row=4, column=1)
 
- #def on_closing(self):
-        #if messagebox.askyesno(title="Quit Order?", message="Do you want to leave without submitting your order?"):
-        #self.root.destroy()
+time = tkinter.Entry(time_info_frame)
+time.grid(row=4, column=1)
+
+Button(base, text="Submit", width=10).place(x=200,y=400)
+base.mainloop()
+
+
+
+
+def on_close():
+    response=messagebox.askyesno('Exit Form','Are you sure you want to leave without submitting your order?')
+    if response:
+        window.destroy()
+
+
+window.protocol('WM_DELETE_WINDOW',on_close)
+
+#submit button
+
+def callback():
+    print "Sweet! You've submitted your Order"
+
+SaveButton = Button(top, text="Save Details", width=10, command=callback)
+SaveButton.grid(row=1, column=1)
 
 
 
