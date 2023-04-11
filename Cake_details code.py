@@ -1,10 +1,9 @@
 from tkinter import *
 from PIL import ImageTk, Image
-
+import subprocess
 import sqlite3
-import traceback
 
-
+# Muktika
 
 
 # List of options
@@ -20,7 +19,7 @@ class Cake_details:
         
         
         # Cake Details Frame
-        self.frame = LabelFrame(master, text="Cake Details", padx=5, pady=5, bg='tomato')
+        self.frame = LabelFrame(master, padx=5, pady=5, bg='LightPink1')
         self.frame.pack(padx=10, pady=10, expand=True, fill=BOTH)
         
         self.frame.config(font=("Helvetica", 12), width=20)
@@ -33,7 +32,7 @@ class Cake_details:
         """-------------------------------------------------------------------"""
         
         # Cake Type Details
-        self.type_label = Label(self.frame, text="Choose a cake :", bg='tomato')
+        self.type_label = Label(self.frame, text="Choose a cake :", bg='LightPink1')
         self.type_label.grid(row=0, column=0)
         self.type_label.config(font=("Helvetica", 12))
         
@@ -49,7 +48,7 @@ class Cake_details:
         """-------------------------------------------------------------------"""
         
         # Cake Size Details
-        self.size_label = Label(self.frame, text="Cake Size :", bg='tomato')
+        self.size_label = Label(self.frame, text="Cake Size :", bg='LightPink1')
         self.size_label.grid(row=0, column=1)
         self.size_label.config(font=("Helvetica", 12))
         
@@ -65,7 +64,7 @@ class Cake_details:
         """-------------------------------------------------------------------"""
         
         # Cake Filling Details
-        self.filling_label = Label(self.frame, text="Cake Filling :", bg='tomato')
+        self.filling_label = Label(self.frame, text="Cake Filling :", bg='LightPink1')
         self.filling_label.grid(row=0, column=2)
         self.filling_label.config(font=("Helvetica", 12))
         
@@ -80,13 +79,13 @@ class Cake_details:
         
         """-------------------------------------------------------------------"""
         
-        self.l_label = Label(self.frame, text="---------------------------------", bg='tomato', fg="tomato")
+        self.l_label = Label(self.frame, text="---------------------------------", bg='LightPink1', fg="LightPink1")
         self.l_label.grid(row=3, column=1, ipady=10)
         
         """-------------------------------------------------------------------"""  
         
         # Additional decorations
-        self.deco_label = Label(self.frame, text="Additional Decoration", bg='tomato')
+        self.deco_label = Label(self.frame, text="Additional Decoration", bg='LightPink1')
         self.deco_label.grid(row=4, column=0, ipady=5)
         self.deco_label.config(font=("Helvetica", 12))
         
@@ -98,7 +97,7 @@ class Cake_details:
         """-------------------------------------------------------------------"""  
         
         # Additional information
-        self.info_label = Label(self.frame, text="Additional Information", bg='tomato')
+        self.info_label = Label(self.frame, text="Additional Information", bg='LightPink1')
         self.info_label.grid(row=4, column=2, ipady=5)
         self.info_label.config(font=("Helvetica", 12))
         
@@ -110,13 +109,13 @@ class Cake_details:
         """-------------------------------------------------------------------"""
         
         # Save button and Spaces
-        self.l_label = Label(self.frame, text="---------------------------------", bg='tomato', fg="tomato")
+        self.l_label = Label(self.frame, text="---------------------------------", bg='LightPink1', fg="LightPink1")
         self.l_label.grid(row=7, column=1, ipady=10)   
         
-        self.l_label = Label(self.frame, text="---------------------------------", bg='tomato', fg="tomato")
+        self.l_label = Label(self.frame, text="---------------------------------", bg='LightPink1', fg="LightPink1")
         self.l_label.grid(row=8, column=1, ipady=10)
         
-        self.l_label = Label(self.frame, text="---------------------------------", bg='tomato', fg="tomato")
+        self.l_label = Label(self.frame, text="---------------------------------", bg='LightPink1', fg="LightPink1")
         self.l_label.grid(row=9, column=1, ipady=10)        
         
         save_button = Button(self.frame, text="Save", command=self.save_value)
@@ -141,12 +140,12 @@ class Cake_details:
         self.img_dropdown.grid(row=6, column=1, ipadx=10)
         
         # create frames for images
-        self.img_label = Label(self.frame, text="Reference Image", bg='tomato')
+        self.img_label = Label(self.frame, text="Reference Image", bg='LightPink1')
         self.img_label.grid(row=4, column=1)
         self.img_label.config(font=("Helvetica", 12))
         self.img_frame = Frame(self.frame, width=380, height=300)
         self.img_frame.grid(row=5, column=1)
-        self.label = Label(self.img_frame, image=self.cake_img[0], bg='tomato')  # set the default image to the first image in the list
+        self.label = Label(self.img_frame, image=self.cake_img[0], bg='LightPink1')  # set the default image to the first image in the list
         self.label.grid(row=5, column=1)
         
     def update_image(self, option):
@@ -176,7 +175,7 @@ class Cake_details:
         # SQLite database and table
         conn = sqlite3.connect("cakeorder_db.db")
         c = conn.cursor()
-        c.execute("INSERT INTO cake_details (size, type, filling, additional_decorations, additional_info, reference_image) VALUES (?, ?, ?, ?, ?, ?)", (selected_size, selected_type, selected_filling, selected_deco, selected_info, selected_img))      
+        c.execute("INSERT INTO cake_details (size, type, filling, additional_decorations, additional_info, reference_image) VALUES (?, ?, ?, ?, ?, ?)", (selected_size, selected_type, selected_filling, selected_deco, selected_info, selected_img))
 
         conn.commit()
         conn.close()
@@ -185,17 +184,17 @@ class Cake_details:
         
     def open_contact_window(self):
         #create_new_window()
-        pass
-        
-        
-        
-
+        proc=subprocess.Popen(["python", "main.py"])
+        #close the current GUI
+        root.destroy()
+        # allows the new_gui to stay
+        proc.wait()
         
         
         
 
 
 root = Tk()
-root.geometry("1200x750")
+root.geometry("1100x600")
 cake = Cake_details(root)
 root.mainloop()

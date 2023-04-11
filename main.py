@@ -2,10 +2,12 @@ from tkinter import ttk
 from tkinter import *
 from tkcalendar import *
 import tkinter.font
-from tkinter import messagebox
-
 from tkinter import PhotoImage
+import subprocess
 
+import sqlite3
+
+# Emaan
 
 window = tkinter.Tk()
 window.title("Let's get started!")
@@ -13,32 +15,9 @@ window.minsize(width=500, height=700)
 window.configure(bg="LightPink1")
 #filename=PhotoImage(file="cakes.jpeg")
 
-# creating main frame
-main_frame= Frame(root)
-main_frame.pack(fill=BOTH, expand=1)
-
-#SCROLLBAR (created using a codemy YouTube tutorial)
-
-# creating a canvas
-my_canvas = Canvas(main_frame)
-my_canvas.pack(side=LEFT, fill=BOTh, expand=1)
-
-# Adding a scrollbar to the canvas
-my_scrollbar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
-my_scroolbar.pack(side=RIGHT, fill=Y)
-
-# configure the canvas
-my_canvas.configure(yscrollcommand=my_scrollbar.set)
-my_canvas.bind('<Configure>', lambda e: my_canvas.configure()
-
-# create another frame inside the canvas
-second_frame = Frame(my_canvas)
-
-# add that new frame to a window in the canvas
-my_canvas.create_window((0,0), window= second_frame, anchor= "nw")
 
 frame = tkinter.Frame(window)
-frame.pack()
+frame.pack(expand=True, fill=Y)
 
 # shop name
 #shop_intro = Label(text= "Simply Start your order.", font= ("Helvetica", 20, "bold"), bg='tomato')
@@ -94,8 +73,9 @@ postal_entry = tkinter.Entry(address_frame)
 postal_entry.grid(row=2, column=1)
 
 # billing address
+var = tkinter.BooleanVar()
 billing_label = tkinter.Label(address_frame, text= "Billing Address")
-billing_check = tkinter.Checkbutton(address_frame, text="Same as Delivery Address")
+billing_check = tkinter.Checkbutton(address_frame, text="Same as Delivery Address", variable=var)
 billing_label.grid(row=3, column=0)
 billing_check.grid(row=4, column=0)
 
@@ -120,54 +100,81 @@ email_entry.grid(row=6, column=0)
 
 # date and time
 date_info_frame =tkinter.LabelFrame(frame, text= "Date and Time")
-date_info_frame.grid(row=3, column=0, sticky= "news", padx=20, pady=20)
+date_info_frame.grid(row=3, column=0, sticky= "news", padx=20, pady=18)
 
 cal= Calendar(date_info_frame, selectmode="day", year=2020, month=5, day=22 )
 cal.pack(pady=20)
 
-# choose date from calendar, (using Tkinter's built in calendar widget)
 def grab_date():
-    my_label.config(text=cal.get_date())
+    delivery_date = cal.get_date()
 
 my_button =Button(date_info_frame, text= "Select Date", command= grab_date)
 my_button.pack(pady=20)
 
-# choose time
-time_info_frame =tkinter.LabelFrame(frame, text= "Contact Details")
-time_info_frame.grid(row=4, column=0, sticky="news", padx=20, pady=20)
 
-time_label =tkinter.Label(time_info_frame, text= "Timing")
-time_label.grid(row=4, column=1)
+# Save + Confirm button
 
-time = tkinter.Entry(time_info_frame)
-time.grid(row=4, column=1)
+def save_value():
+    entered_name = name_entry.get()
+    selected_method = method_combobox.get()
+    delivery_a = str(street_entry.get()) + str(city_combobox.get()) + ', ' + str(postal_entry.get())
+    phone_n = phone_entry.get()
+    email_a = email_entry.get()
+    delivery_date = cal.get_date()
+    
+    billing_same = var.get()
 
-Button(base, text="Submit", width=10).place(x=200,y=400)
-base.mainloop()
+    if billing_same == True:
+        billing_a = delivery_a
+    else:
+        billing_a='NULL'
+
+    # SQLite database and table
+    conn = sqlite3.connect("cakeorder_db.db")
+    c = conn.cursor()
+    c.execute("UPDATE customer_info SET name = ? WHERE name = 'NULL'", (entered_name))
+    c.execute("INSERT INTO customer_info (name, billing_add, delivery_add, delivery_datetime, phone_num, email_add, payment_method, confirmation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)" (entered_name, billing_a, delivery_a, delivery_date, phone_n, email_a, selected_method, 'NULL'))
 
 
+    conn.commit()
+    conn.close()
+        
+
+def done():
+    entered_name = name_entry.get()
+
+    conn = sqlite3.connect("cakeorder_db.db")
+    c = conn.cursor()
+    c.execute("UPDATE customer_info SET confirmation = ? WHERE name = ?", ('Y', entered_name))
+    #create_new_window()
+    proc=subprocess.Popen(["python", "ThankYou.py"])
+    #close the current GUI
+    window.destroy()
+    # allows the new_gui to stay
+    proc.wait()
 
 
-def on_close():
-    response=messagebox.askyesno('Exit Form','Are you sure you want to leave without submitting your order?')
-    if response:
-        window.destroy()
+main_menu = tkinter.Menu(window)
+window.config(menu=main_menu)
+
+confirmmenu= tkinter.Menu(window, tearoff = 0)
+main_menu.add_cascade(label='Confirm', menu=confirmmenu)
+confirmmenu.add_command(label='Save', command= save_value)
+confirmmenu.add_command(label='Done', command= done)
 
 
-window.protocol('WM_DELETE_WINDOW',on_close)
+#time_label = Label(date_info_frame, text="timing")
+#time_label.grid(row= 3, column= 0, pady=20)
 
-#submit button
+#time_entry= tkinter.Entry(date_info_frame)
 
-def callback():
-    print "Sweet! You've submitted your Order"
-
-SaveButton = Button(top, text="Save Details", width=10, command=callback)
-SaveButton.grid(row=1, column=1)
+ #def on_closing(self):
+        #if messagebox.askyesno(title="Quit Order?", message="Do you want to leave without submitting your order?"):
+        #self.root.destroy()
 
 
 
 window.mainloop()
-
 
 
 
