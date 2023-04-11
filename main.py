@@ -147,7 +147,7 @@ def done():
     c = conn.cursor()
     c.execute("UPDATE customer_info SET confirmation = ? WHERE name = ?", ('Y', entered_name))
     #create_new_window()
-    proc=subprocess.Popen(["python", "ThankYou.py"])
+    proc=subprocess.Popen(["python", "payment details.py"])
     #close the current GUI
     window.destroy()
     # allows the new_gui to stay
@@ -158,9 +158,9 @@ main_menu = tkinter.Menu(window)
 window.config(menu=main_menu)
 
 confirmmenu= tkinter.Menu(window, tearoff = 0)
-main_menu.add_cascade(label='Confirm', menu=confirmmenu)
+main_menu.add_cascade(label='Confirmation', menu=confirmmenu)
 confirmmenu.add_command(label='Save', command= save_value)
-confirmmenu.add_command(label='Done', command= done)
+confirmmenu.add_command(label='Submit', command= done)
 
 
 #time_label = Label(date_info_frame, text="timing")

@@ -1,26 +1,25 @@
 import tkinter as tk
-from tkinter import *
+from PIL import ImageTk, Image
 import time
-
-# Muktika
 
 # create the root window
 root = tk.Tk()
+root.title("Thank you for ordering!")
 
-# create a label with the message
-label = tk.Label(root, text="Thank you for ordering!", bg='LightPink1', fg='white')
-label.pack()
-label.config(font=("Helvetica", 30))
-label.place(relx=0.5, rely=0.5, anchor="center")
+# Set background image
+bg_image = ImageTk.PhotoImage(Image.open("exit.png").resize((400, 300)))
+bg_label = tk.Label(root, image=bg_image)
+bg_label.place(relwidth=1, relheight=1)
 
-# define a function to close the window after 5 seconds
+# define a function to close the window after 2 seconds
 def close_window():
-    time.sleep(1)  # wait for 5 seconds
+    time.sleep(2)  # wait for 2 seconds
     root.destroy()  # close the window
 
 # call the close_window function after a short delay
 root.after(1000, close_window)
-root.geometry("500x200")
+
+root.geometry("400x300")
 root.config(bg='LightPink1')
 
 # start the event loop
