@@ -1,12 +1,14 @@
-from Tkinter import *
-import Tkinter as tk
-master = tk.Tk()
-bgimg= tk.PhotoImage(file = "welcome.png")
-#Specify the file name present in the same directory or else
-#specify the proper path for retrieving the image to set it as background image.
-limg= Label(master, i=bgimg)
-limg.pack()
-master.mainloop()
+from tkinter import *
 
-Button(window, text="Get Started!", width=30).place(x=200,y=400)
-window.mainloop()
+root = Tk()
+root.title("Welcome")
+root.geometry("500x600")
+
+# Define image
+bg = PhotoImage(file= "images/welcome.png")
+
+# create a label
+my_label = Label(root, image=bg)
+my_label.place(x=0, y=0, relwidth= 1, relheight=1)
+
+root.mainloop()
